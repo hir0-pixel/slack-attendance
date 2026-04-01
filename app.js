@@ -9,7 +9,7 @@ app.command('/attend', async ({ command, ack, respond, client }) => {
   await ack();
   const userInfo = await client.users.info({ user: command.user_id });
   const userName = userInfo.user.profile.display_name || userInfo.user.real_name || command.user_name;
-  const timestamp = new Date().toLocaleString('en-PK', { timeZone: 'Asia/Karachi' });
+  const timestamp = new Date().toLocaleString('en-PK', { timeZone: 'Asia/Karachi', hour: '2-digit', minute: '2-digit', hour12: true });
   console.log(`Attendance marked: ${userName} at ${timestamp}`);
   await respond({
     response_type: 'in_channel',
@@ -21,7 +21,7 @@ app.command('/logoff', async ({ command, ack, respond, client }) => {
   await ack();
   const userInfo = await client.users.info({ user: command.user_id });
   const userName = userInfo.user.profile.display_name || userInfo.user.real_name || command.user_name;
-  const timestamp = new Date().toLocaleString('en-PK', { timeZone: 'Asia/Karachi' });
+  const timestamp = new Date().toLocaleString('en-PK', { timeZone: 'Asia/Karachi', hour: '2-digit', minute: '2-digit', hour12: true });
   console.log(`Signed off: ${userName} at ${timestamp}`);
   await respond({
     response_type: 'in_channel',
