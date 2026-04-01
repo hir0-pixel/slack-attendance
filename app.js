@@ -5,36 +5,41 @@ const app = new App({
   signingSecret: process.env.SLACK_SIGNING_SECRET,
 });
 
+function getOrdinal(n) {
+  const s = ['th', 'st', 'nd', 'rd'];
+  const v = n % 100;
+  return n + (s[(v - 20) % 10] || s[v] || s[0]);
+}
+
+function getTimestamp(now) {
+  const karachi = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Karachi' }));
+  const month = now.toLocaleString('en-US', { timeZone: 'Asia/Karachi', month: 'long' });
+  const day = getOrdinal(karachi.getDate());
+  const year = karachi.getFullYear();
+  const time = now.toLocaleString('en-US', { timeZone: 'Asia/Karachi', hour: 'numeric', minute: '2-digit', hour12: true });
+  return `${month} ${day}, ${year} at ${time}`;
+}
+
 app.command('/attend', async ({ command, ack, respond, client }) => {
   await ack();
-  
   setTimeout(async () => {
     const userInfo = await client.users.info({ user: command.user_id });
     const userName = userInfo.user.profile.display_name || userInfo.user.real_name || command.user_name;
-    const now = new Date();
-    const date = now.toLocaleDateString('en-US', { timeZone: 'Asia/Karachi', month: 'long', day: 'numeric', year: 'numeric' });
-    const time = now.toLocaleString('en-PK', { timeZone: 'Asia/Karachi', hour: '2-digit', minute: '2-digit', hour12: true });
-    const timestamp = `${date}, ${time}`;
     await respond({
       response_type: 'in_channel',
-      text: `✅ *${userName}* logged in at ${timestamp}`
+      text: `✅ *${userName}* logged in on ${getTimestamp(new Date())}`
     });
   }, 100);
 });
 
 app.command('/logoff', async ({ command, ack, respond, client }) => {
   await ack();
-
   setTimeout(async () => {
     const userInfo = await client.users.info({ user: command.user_id });
     const userName = userInfo.user.profile.display_name || userInfo.user.real_name || command.user_name;
-    const now = new Date();
-    const date = now.toLocaleDateString('en-US', { timeZone: 'Asia/Karachi', month: 'long', day: 'numeric', year: 'numeric' });
-    const time = now.toLocaleString('en-PK', { timeZone: 'Asia/Karachi', hour: '2-digit', minute: '2-digit', hour12: true });
-    const timestamp = `${date}, ${time}`;
     await respond({
       response_type: 'in_channel',
-      text: `👋 *${userName}* logged off at ${timestamp}`
+      text: `👋 *${userName}* logged off on ${getTimestamp(new Date())}`
     });
   }, 100);
 });
