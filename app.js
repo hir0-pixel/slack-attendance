@@ -16,7 +16,7 @@ app.command('/attend', async ({ command, ack, respond, client }) => {
   console.log(`Attendance marked: ${userName} at ${timestamp}`);
 
   await respond({
-    response_type: 'ephemeral',
+    response_type: 'in_channel',
     text: `✅ Attendance marked for *${userName}* at ${timestamp}`
   });
 });
